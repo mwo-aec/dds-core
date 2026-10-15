@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/pack.schema.json",
+  "id": "digital-reframe",
+  "name": "Digital Reframe DDS — Revit families (example)",
+  "layer": "base",
+  "version": "0.2.0",
+  "owner": { "kind": "person", "name": "Machiel Odendaal", "role": "standards owner" },
+  "domains": ["revit-families"],
+  "description": "Example base pack for the job 'Create a Revit family to our standards'. Two rules are taken from RaD's base DDS 0.2.0; the capture, run, review and change request are illustrative.",
+  "confidentiality": "internal",
+  "resources": [
+    {
+      "id": "RES-FAM-LIBRARY",
+      "kind": "library",
+      "location": { "path": "[LIBRARY PATH — to be set]" },
+      "purpose": "Approved families to nest (profiles, hardware, generic components), by category. Generators pull nested components from here.",
+      "appliesTo": ["nested-family"]
+    },
+    {
+      "id": "RES-FAM-PARAMS",
+      "kind": "parameter-file",
+      "location": { "path": "rules/parameters/drfParams.csv" },
+      "purpose": "Definitions of the identity parameters in DDS-PARAM-003."
+    }
+  ],
+  "created": { "by": { "kind": "ai", "name": "claude-opus-5-5" }, "at": "2026-10-15", "method": "imported" }
+}

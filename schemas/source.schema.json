@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/source.schema.json",
+  "title": "Source",
+  "description": "Anything captured that helps describe how a job is done: an interview, a protocol document, a training video, an existing artefact (a family library, a model, a drawing set), a script. Sources are recorded, not interpreted. Capture phase.",
+  "type": "object",
+  "required": ["id", "kind", "medium", "title", "created"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix SRC-." },
+    "kind": {
+      "enum": ["told", "found", "documented"],
+      "description": "told = a person explained it (interview, answer to a question, minutes). found = it exists in an artefact and is read from it (harvested). documented = someone wrote or recorded it as guidance (protocol, standard, manual, training video)."
+    },
+    "medium": {
+      "enum": ["interview", "recording", "transcript", "message", "document", "video", "image", "drawing-set", "model", "library", "dataset", "script", "other"]
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "location": { "$ref": "common.schema.json#/$defs/location" },
+    "domain": { "type": "string", "description": "The adapter/domain this source belongs to, e.g. 'revit-families', 'revit-model', 'general'." },
+    "jobs": { "$ref": "common.schema.json#/$defs/refs", "description": "Jobs this source informs." },
+    "toldBy": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/actor" }, "description": "For told sources: who spoke." },
+    "confidentiality": { "$ref": "common.schema.json#/$defs/confidentiality" },
+    "created": { "$ref": "common.schema.json#/$defs/created" },
+    "captureRun": { "$ref": "common.schema.json#/$defs/ref", "description": "The capture run that produced or read this source, if any." },
+    "notes": { "type": "string" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

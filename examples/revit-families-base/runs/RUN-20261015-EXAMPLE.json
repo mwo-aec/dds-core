@@ -1,0 +1,97 @@
+{
+  "$schema": "../../../schemas/run.schema.json",
+  "id": "RUN-20261015-EXAMPLE",
+  "job": "JOB-CREATE-FAMILY",
+  "request": "ILLUSTRATIVE — Create a simple table family, 1800 x 900, our standards.",
+  "requestedBy": {
+    "kind": "person",
+    "name": "Machiel Odendaal",
+    "role": "standards owner"
+  },
+  "packs": [
+    {
+      "id": "digital-reframe",
+      "version": "0.2.0"
+    }
+  ],
+  "started": "2026-10-15T18:10:00+02:00",
+  "ended": "2026-10-15T18:14:00+02:00",
+  "steps": [
+    {
+      "step": "STEP-FAM-PREPARE",
+      "by": {
+        "kind": "ai",
+        "name": "claude-opus-5-5"
+      },
+      "tools": [],
+      "result": "done",
+      "workRecords": [
+        {
+          "kind": "structured-read",
+          "location": {
+            "path": "runs/RUN-20261015-EXAMPLE/params.json"
+          },
+          "describes": "Parameters after setup",
+          "cannotShow": "Whether formulas evaluate in every type"
+        }
+      ],
+      "checks": [
+        {
+          "check": "DDS-PARAM-003.present",
+          "passed": 1,
+          "failed": 0
+        }
+      ],
+      "selfAssessment": "Identity parameters added; TXT_Cat Type left empty as the rule says."
+    },
+    {
+      "step": "STEP-FAM-BUILD",
+      "by": {
+        "kind": "ai",
+        "name": "claude-opus-5-5"
+      },
+      "result": "done",
+      "workRecords": [
+        {
+          "kind": "artefact",
+          "location": {
+            "path": "runs/RUN-20261015-EXAMPLE/Table.rfa"
+          }
+        },
+        {
+          "kind": "image",
+          "location": {
+            "path": "runs/RUN-20261015-EXAMPLE/3d.png"
+          }
+        }
+      ],
+      "notes": "Leg modelled in place: no library location set (Q-NEST-LIB-001)."
+    },
+    {
+      "step": "STEP-FAM-CHECK",
+      "by": {
+        "kind": "person",
+        "name": "Machiel Odendaal",
+        "role": "standards owner"
+      },
+      "result": "done",
+      "workRecords": [
+        {
+          "kind": "report",
+          "location": {
+            "path": "runs/RUN-20261015-EXAMPLE/report.md"
+          }
+        }
+      ]
+    }
+  ],
+  "result": "done",
+  "outputs": [
+    {
+      "path": "runs/RUN-20261015-EXAMPLE/Table.rfa"
+    }
+  ],
+  "questions": [
+    "Q-NEST-LIB-001"
+  ]
+}

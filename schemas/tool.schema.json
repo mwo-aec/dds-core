@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/tool.schema.json",
+  "title": "Tool (shorthand)",
+  "description": "A registered way to do a known step without AI reasoning, or to capture something: a script, an MCP tool, a skill, a template. Tools that change an artefact need approval before use. Express phase (and Capture, for harvesters).",
+  "type": "object",
+  "required": ["id", "name", "kind", "purpose", "readOnly", "deterministic", "approval"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix TOOL-." },
+    "name": { "type": "string" },
+    "kind": { "enum": ["script", "mcp-tool", "skill", "template", "add-in-command"] },
+    "purpose": { "type": "string" },
+    "phase": { "enum": ["capture", "organise", "distil", "express", "review"] },
+    "readOnly": { "type": "boolean", "description": "true if it never changes an artefact." },
+    "deterministic": { "type": "boolean", "description": "true if the same inputs always give the same outputs." },
+    "invocation": { "type": "string", "description": "How to call it: MCP tool name and arguments, script path and command, skill name." },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object" },
+    "approval": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["proposed", "approved", "retired"] },
+        "by": { "$ref": "common.schema.json#/$defs/actor" },
+        "at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "version": { "type": "string" },
+    "location": { "$ref": "common.schema.json#/$defs/location" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

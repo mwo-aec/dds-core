@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/capture-run.schema.json",
+  "title": "Capture run",
+  "description": "One pass of a harvester or a capture session over a scope: which adapter, what it looked at, what it produced, and what it could not read. Capture phase.",
+  "type": "object",
+  "required": ["id", "adapter", "scope", "started", "outputs"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix CAP-." },
+    "adapter": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "description": "e.g. 'revit-families'." },
+        "version": { "type": "string" },
+        "tool": { "type": "string", "description": "The implementation that ran, e.g. 'RaD harvest_families'." }
+      },
+      "additionalProperties": false
+    },
+    "owner": { "type": "string", "description": "Whose material this is: the firm or client name." },
+    "scope": {
+      "type": "object",
+      "description": "What was looked at and how it was sampled.",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string" },
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "filters": { "type": "object" },
+        "sample": { "type": "object", "properties": { "method": { "enum": ["all", "even-spread", "random", "hand-picked"] }, "size": { "type": "integer", "minimum": 0 } }, "additionalProperties": false }
+      },
+      "additionalProperties": false
+    },
+    "sources": { "$ref": "common.schema.json#/$defs/refs" },
+    "started": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "ended": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "by": { "$ref": "common.schema.json#/$defs/actor" },
+    "counts": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 }, "description": "Headline counts, e.g. { \"sources\": 42, \"observations\": 9310 }." },
+    "outputs": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/location" },
+      "description": "Files written: observations (JSONL), summaries."
+    },
+    "problems": {
+      "type": "array",
+      "description": "Things that could not be read. A capture that cannot read something says so; it never guesses.",
+      "items": {
+        "type": "object",
+        "required": ["subject", "message"],
+        "properties": { "subject": { "type": "string" }, "message": { "type": "string" } },
+        "additionalProperties": false
+      }
+    },
+    "confidentiality": { "$ref": "common.schema.json#/$defs/confidentiality" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

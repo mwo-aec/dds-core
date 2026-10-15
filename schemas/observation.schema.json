@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/observation.schema.json",
+  "title": "Observation",
+  "description": "One fact read from a source: a subject, an aspect of it, and a value. Observations are what harvesters write and what analysis reads. They say what is there, never what it means. Store many as JSON Lines (one observation per line). Capture phase.",
+  "type": "object",
+  "required": ["id", "source", "subject", "aspect", "value", "extractor"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix OBS-. Unique within the capture run." },
+    "source": { "$ref": "common.schema.json#/$defs/ref", "description": "The source this fact was read from." },
+    "captureRun": { "$ref": "common.schema.json#/$defs/ref" },
+    "subject": {
+      "type": "object",
+      "description": "The thing the fact is about. 'kind' comes from the adapter's subject vocabulary (e.g. family, type, parameter, nested-family).",
+      "required": ["kind", "key"],
+      "properties": {
+        "kind": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "key": { "type": "string", "minLength": 1, "description": "Stable key for the subject within the source, e.g. 'Door-Single-Flush.rfa' or 'Door-Single-Flush.rfa/param/TXT_Company'." },
+        "name": { "type": "string" },
+        "parent": { "type": "string", "description": "The key of the containing subject, if any." }
+      },
+      "additionalProperties": false
+    },
+    "aspect": {
+      "type": "string",
+      "pattern": "^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9]*)*$",
+      "description": "What about the subject, from the adapter's aspect vocabulary, dotted: 'name', 'category', 'parameter.group', 'parameter.isShared', 'nesting.isShared'."
+    },
+    "value": { "description": "The value as read. Any JSON type. null means 'read, and empty'; a fact that could not be read is not an observation — record it as a problem on the capture run." },
+    "unit": { "type": "string" },
+    "extractor": {
+      "type": "object",
+      "required": ["name", "version", "method"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "method": { "enum": ["deterministic", "manual", "ai-assisted"], "description": "deterministic = a script/API read; re-running gives the same value. manual = a person recorded it. ai-assisted = an AI read it (e.g. from a video or a scanned PDF); such facts must be spot-checked before analysis relies on them." }
+      },
+      "additionalProperties": false
+    },
+    "observedAt": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "context": { "type": "object", "description": "Anything that helps locate or interpret the fact without interpreting it: file version, host version, type name, view." },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

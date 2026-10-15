@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/change.schema.json",
+  "title": "Change request (lesson)",
+  "description": "A proposed change to the specification, from a review, a question's answer or a new capture. Nothing in a pack changes without an approved change request. Review phase (raised), all phases (applied).",
+  "type": "object",
+  "required": ["id", "kind", "targets", "proposal", "rationale", "raised", "status"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix CR-." },
+    "kind": { "enum": ["add-rule", "change-rule", "retire-rule", "add-check", "change-check", "add-outcome", "change-job", "add-tool", "change-tool", "add-resource", "other"] },
+    "targets": { "$ref": "common.schema.json#/$defs/refs", "description": "The items changed or added (proposed ids for new items)." },
+    "pack": { "type": "string", "description": "The pack (layer) the change applies to." },
+    "proposal": { "type": "string", "description": "The change, specifically enough to apply." },
+    "rationale": { "type": "string" },
+    "from": { "$ref": "common.schema.json#/$defs/refs", "description": "The reviews, questions or sources that led here." },
+    "raised": { "$ref": "common.schema.json#/$defs/created" },
+    "status": { "enum": ["proposed", "approved", "rejected", "applied"] },
+    "decision": {
+      "type": "object",
+      "required": ["by", "at"],
+      "properties": { "by": { "$ref": "common.schema.json#/$defs/actor" }, "at": { "$ref": "common.schema.json#/$defs/timestamp" }, "note": { "type": "string" } },
+      "additionalProperties": false
+    },
+    "appliedIn": { "$ref": "common.schema.json#/$defs/semver", "description": "The pack version that contains the change." },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "enum": ["approved", "rejected", "applied"] } } }, "then": { "required": ["decision"] } },
+    { "if": { "properties": { "status": { "const": "applied" } } }, "then": { "required": ["appliedIn"] } }
+  ],
+  "additionalProperties": false
+}

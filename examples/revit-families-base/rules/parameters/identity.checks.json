@@ -1,0 +1,25 @@
+{
+  "$schema": "../../../../schemas/checks.schema.json",
+  "rule": "DDS-PARAM-003",
+  "checks": [
+    {
+      "id": "DDS-PARAM-003.present",
+      "target": "parameter",
+      "aspect": "name",
+      "kind": "required",
+      "values": ["TXT_Company", "URL_Website", "TXT_Creator", "TXT_Origin", "TXT_Cat Type"],
+      "severity": "must",
+      "message": "Every family carries the identity parameters TXT_Company, URL_Website, TXT_Creator, TXT_Origin and TXT_Cat Type."
+    },
+    {
+      "id": "DDS-PARAM-003.type-params",
+      "target": "parameter",
+      "aspect": "isInstance",
+      "where": { "name": ["TXT_Company", "URL_Website", "TXT_Creator", "TXT_Origin", "TXT_Cat Type"] },
+      "kind": "equals",
+      "values": [false],
+      "severity": "must",
+      "message": "Identity parameters are type parameters, not instance parameters."
+    }
+  ]
+}

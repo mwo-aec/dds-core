@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/job.schema.json",
+  "title": "Job (the method card)",
+  "description": "One job the owner wants done, in two halves. Part A, the job: stable, tool-free — the job story, who told it, the owner, the desired outcomes and what must not go wrong. Part B, the method: current — the job map, its steps and tasks, who is hired for each, the rules, inputs and questions. Organise phase (with Capture and Distil feeding it).",
+  "type": "object",
+  "required": ["id", "name", "owner", "jobStory", "outcomes", "jobMap", "lifecycle", "version"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix JOB-." },
+    "name": { "type": "string", "minLength": 1, "description": "A verb and an object: 'Create a Revit family', 'Create GAs'." },
+    "version": { "$ref": "common.schema.json#/$defs/semver" },
+    "lifecycle": { "$ref": "common.schema.json#/$defs/lifecycle" },
+    "domain": { "type": "string" },
+    "owner": { "$ref": "common.schema.json#/$defs/actor", "description": "The person responsible for this job in the owning organisation." },
+
+    "jobStory": {
+      "type": "object",
+      "description": "Part A. When [situation], I want to [motivation], so I can [outcome]. In the teller's words.",
+      "required": ["when", "iWantTo", "soICan"],
+      "properties": {
+        "when": { "type": "string", "minLength": 1 },
+        "iWantTo": { "type": "string", "minLength": 1 },
+        "soICan": { "type": "string", "minLength": 1 },
+        "basis": { "$ref": "common.schema.json#/$defs/basis" }
+      },
+      "additionalProperties": false
+    },
+    "toldBy": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/actor" }, "description": "Part A. Everyone whose account shaped this job. Aim for the doer and the checker at least." },
+    "sources": { "$ref": "common.schema.json#/$defs/refs", "description": "Sources this job was built from." },
+    "outcomes": {
+      "type": "array",
+      "description": "Part A. 3–7 measurable, tool-free outcome statements: 'Reduce the chance that …', 'Reduce the time it takes to …'. The yardstick the review measures against.",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "basis"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix OUT-." },
+          "statement": { "type": "string", "minLength": 1 },
+          "measure": { "type": "string", "description": "How it is measured, if known." },
+          "basis": { "$ref": "common.schema.json#/$defs/basis" },
+          "confirmed": { "$ref": "common.schema.json#/$defs/confirmation" },
+          "evidence": { "$ref": "common.schema.json#/$defs/evidence" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "mustNotGoWrong": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Part A. What would embarrass the owner, cost money or be unsafe. Steps touching these keep a person's final yes."
+    },
+
+    "jobMap": {
+      "type": "array",
+      "description": "Part B. The job's steps placed on the eight universal job stages. A stage with no step is a gap and should carry a question.",
+      "items": {
+        "type": "object",
+        "required": ["stage"],
+        "properties": {
+          "stage": { "enum": ["define", "locate", "prepare", "confirm", "execute", "monitor", "modify", "conclude"] },
+          "steps": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/step" }
+          },
+          "gap": { "type": "string", "description": "Set when no step covers this stage: what is missing." },
+          "questions": { "$ref": "common.schema.json#/$defs/refs" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "inputs": { "$ref": "common.schema.json#/$defs/refs", "description": "Part B. Sources, packs, libraries and tools the job needs." },
+    "openQuestions": { "$ref": "common.schema.json#/$defs/refs", "description": "Part B. Questions (Q-) still open for this job." },
+    "review": {
+      "type": "object",
+      "description": "Part B. How runs of this job are reviewed.",
+      "properties": {
+        "quick": { "type": "string", "description": "The every-run review (live correction)." },
+        "deep": { "type": "string", "description": "When a deep review (debrief) is held." },
+        "reviewer": { "$ref": "common.schema.json#/$defs/actor" }
+      },
+      "additionalProperties": false
+    },
+    "created": { "$ref": "common.schema.json#/$defs/created" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "step": {
+      "type": "object",
+      "required": ["id", "title", "hired"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix STEP-." },
+        "title": { "type": "string" },
+        "does": { "type": "string", "description": "What the step achieves, in plain words." },
+        "hired": {
+          "type": "object",
+          "description": "Who does the step today, and who could.",
+          "required": ["now"],
+          "properties": {
+            "now": { "enum": ["person", "script", "ai", "ai-with-person"] },
+            "next": { "enum": ["person", "script", "ai", "ai-with-person"] },
+            "finalYes": { "type": "boolean", "description": "true when a person must give the final yes on this step's result." }
+          },
+          "additionalProperties": false
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "text"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix TASK-." },
+              "kind": { "enum": ["ai-does", "ai-asks", "person-decides"] },
+              "text": { "type": "string" },
+              "tool": { "$ref": "common.schema.json#/$defs/ref", "description": "A registered tool/script (TOOL-) that does it, if any." }
+            },
+            "additionalProperties": false
+          }
+        },
+        "rules": { "$ref": "common.schema.json#/$defs/refs" },
+        "outcomes": { "$ref": "common.schema.json#/$defs/refs", "description": "Which outcomes this step serves." },
+        "workRecord": { "type": "array", "items": { "enum": ["image", "structured-read", "calculation", "step-log", "report", "artefact"] }, "description": "What every run of this step must leave behind." }
+      },
+      "additionalProperties": false
+    }
+  }
+}

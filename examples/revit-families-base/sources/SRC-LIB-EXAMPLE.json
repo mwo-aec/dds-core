@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../schemas/source.schema.json",
+  "id": "SRC-LIB-EXAMPLE",
+  "kind": "found",
+  "medium": "library",
+  "title": "ILLUSTRATIVE family library",
+  "location": {
+    "path": "[FAMILY LIBRARY PATH]"
+  },
+  "domain": "revit-families",
+  "jobs": [
+    "JOB-CREATE-FAMILY"
+  ],
+  "confidentiality": "internal",
+  "created": {
+    "by": {
+      "kind": "script",
+      "name": "RaD harvest_families"
+    },
+    "at": "2026-10-15",
+    "method": "found"
+  },
+  "captureRun": "CAP-20261015-EXAMPLE"
+}

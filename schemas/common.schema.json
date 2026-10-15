@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/common.schema.json",
+  "title": "DDS Core — shared definitions",
+  "description": "Building blocks every other DDS schema refers to. Field names are camelCase.",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier: upper-case segments joined by hyphens, optionally a lower-case dotted suffix for a part of something (a check of a rule). Examples: DDS-PARAM-003, DDS-PARAM-003.present, JOB-CREATE-FAMILY, OBS-000123, Q-NEST-004.",
+      "pattern": "^[A-Z][A-Z0-9]*(-[A-Z0-9]+)*(\\.[a-z0-9][a-z0-9-]*)*$"
+    },
+    "ref": {
+      "$ref": "#/$defs/id",
+      "description": "The id of another DDS item. The prefix tells the reader what kind of item it is (see spec/01-information-types.md)."
+    },
+    "refs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ref" },
+      "uniqueItems": true
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "ISO 8601 date-time, or a plain date when the time is unknown.",
+      "anyOf": [
+        { "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T" },
+        { "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+      ]
+    },
+    "actor": {
+      "type": "object",
+      "description": "Who did something: a person, an AI, or a script/tool.",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": { "enum": ["person", "ai", "script"] },
+        "name": { "type": "string", "minLength": 1, "description": "Person's name or role-holder; AI model id; script or tool name." },
+        "role": { "type": "string", "description": "The role they acted in, e.g. 'standards owner', 'reviewer', 'family author'." },
+        "version": { "type": "string", "description": "Model or tool version, when kind is ai or script." }
+      },
+      "additionalProperties": false
+    },
+    "basis": {
+      "enum": ["unset", "borrowed", "seen", "confirmed"],
+      "description": "Where a rule or outcome stands on evidence. unset = nobody has said yet. borrowed = taken from a framework default or another layer, not yet checked for this owner. seen = evidenced in the owner's own work (harvested, observed, drafted by AI) but not confirmed. confirmed = a named person with authority has confirmed it. AI may raise an item to 'seen' at most; only a person makes it 'confirmed'."
+    },
+    "lifecycle": {
+      "enum": ["draft", "active", "retired"],
+      "description": "Whether an item is in use. draft = written, not applied. active = applied in runs and checks. retired = kept for history, not applied."
+    },
+    "severity": {
+      "enum": ["must", "should", "may"],
+      "description": "How strict a rule or check is. must = a failure blocks. should = a failure is reported. may = advice."
+    },
+    "confidentiality": {
+      "enum": ["public", "internal", "confidential"],
+      "description": "Who may see the item or source. confidential material (client files, models, recordings) never goes into a public repository; reference it by path and hash instead."
+    },
+    "evidence": {
+      "type": "array",
+      "description": "What an item rests on: observations, sources, runs or reviews, each with an optional note.",
+      "items": {
+        "type": "object",
+        "required": ["ref"],
+        "properties": {
+          "ref": { "$ref": "#/$defs/ref" },
+          "note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "confirmation": {
+      "type": "object",
+      "description": "The person who confirmed an item, and when. Required when basis is 'confirmed'.",
+      "required": ["by", "at"],
+      "properties": {
+        "by": { "$ref": "#/$defs/actor" },
+        "at": { "$ref": "#/$defs/timestamp" },
+        "note": { "type": "string" },
+        "source": { "$ref": "#/$defs/ref", "description": "The told source (interview, email, minutes) where the confirmation was given." }
+      },
+      "additionalProperties": false
+    },
+    "created": {
+      "type": "object",
+      "description": "Who made an item and how.",
+      "required": ["by", "at"],
+      "properties": {
+        "by": { "$ref": "#/$defs/actor" },
+        "at": { "$ref": "#/$defs/timestamp" },
+        "method": { "enum": ["told", "found", "documented", "distilled", "authored", "imported"], "description": "told = from a person; found = extracted from an artefact; documented = taken from a written protocol/video; distilled = derived by analysis; authored = written directly; imported = copied from another pack." }
+      },
+      "additionalProperties": false
+    },
+    "location": {
+      "type": "object",
+      "description": "Where a file or resource is. Paths are relative to the pack root unless absolute or a URI.",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Adapter- or tool-specific fields, namespaced by the adapter id, e.g. { \"revit-families\": { ... } }. Core readers ignore what they don't know.",
+      "additionalProperties": { "type": "object" }
+    }
+  }
+}

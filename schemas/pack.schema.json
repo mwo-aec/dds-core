@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/pack.schema.json",
+  "title": "Pack manifest (dds.json)",
+  "description": "A pack is one layer of a DDS on disk: its jobs, rules, checks, questions, tools and resources. Layers stack base → firm or client → project; a higher layer may add rules or override lower ones by id. Compatible with RaD's dds.json.",
+  "type": "object",
+  "required": ["id", "name", "layer", "version", "owner"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "e.g. 'digital-reframe', 'client-acme', 'project-2023-a059'." },
+    "name": { "type": "string" },
+    "layer": { "enum": ["base", "firm", "client", "project"] },
+    "version": { "$ref": "common.schema.json#/$defs/semver" },
+    "extends": {
+      "type": "array",
+      "description": "The packs this one sits on, lowest first, with the version range it was written against.",
+      "items": {
+        "type": "object",
+        "required": ["id", "version"],
+        "properties": { "id": { "type": "string" }, "version": { "type": "string" } },
+        "additionalProperties": false
+      }
+    },
+    "owner": { "$ref": "common.schema.json#/$defs/actor", "description": "Who owns this layer's content (the standards owner)." },
+    "domains": { "type": "array", "items": { "type": "string" }, "description": "Adapters this pack has content for: 'revit-families', 'revit-model' …" },
+    "description": { "type": "string" },
+    "confidentiality": { "$ref": "common.schema.json#/$defs/confidentiality" },
+    "paths": {
+      "type": "object",
+      "description": "Where each kind of item lives in the pack. Defaults shown.",
+      "properties": {
+        "jobs": { "type": "string", "default": "jobs" },
+        "rules": { "type": "string", "default": "rules" },
+        "questions": { "type": "string", "default": "questions" },
+        "tools": { "type": "string", "default": "tools" },
+        "sources": { "type": "string", "default": "sources" },
+        "captures": { "type": "string", "default": "captures" },
+        "runs": { "type": "string", "default": "runs" },
+        "reviews": { "type": "string", "default": "reviews" },
+        "changes": { "type": "string", "default": "changes" }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "array",
+      "description": "Libraries and reference material runs may pull from: a family library for nesting, shared parameter files, title blocks, templates. Each says what it is for.",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "location", "purpose"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix RES-." },
+          "kind": { "enum": ["library", "parameter-file", "template", "catalogue", "reference", "other"] },
+          "location": { "$ref": "common.schema.json#/$defs/location" },
+          "purpose": { "type": "string" },
+          "appliesTo": { "type": "array", "items": { "type": "string" } },
+          "confidentiality": { "$ref": "common.schema.json#/$defs/confidentiality" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "created": { "$ref": "common.schema.json#/$defs/created" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

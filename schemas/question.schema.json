@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/question.schema.json",
+  "title": "Question",
+  "description": "A gap, contradiction or 'why' that only a person can settle. Raised by analysis, a run or a review; answered by a person. The answer is a told source and goes back through Capture. Distil phase (raised), Capture phase (answered).",
+  "type": "object",
+  "required": ["id", "text", "askedOf", "status", "raised"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix Q-." },
+    "text": { "type": "string", "minLength": 1, "description": "One question, answerable by the person asked." },
+    "why": { "type": "string", "description": "What prompted it, in one or two sentences." },
+    "kind": {
+      "enum": ["gap", "contradiction", "intent", "exception", "scope", "confirm"],
+      "description": "gap = nothing says. contradiction = the evidence disagrees with itself. intent = we see what, not why. exception = is this case an exception or a mistake? scope = where does it apply? confirm = is this candidate rule right?"
+    },
+    "askedOf": { "type": "string", "description": "The role who can answer: 'standards owner', 'family author', 'BIM manager'." },
+    "options": { "type": "array", "items": { "type": "string" }, "description": "Likely answers, when they help the person answer quickly. Always allow a free answer." },
+    "priority": { "enum": ["high", "normal", "low"] },
+    "relatesTo": { "$ref": "common.schema.json#/$defs/refs", "description": "Rules, outcomes, steps or jobs the answer affects." },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidence" },
+    "status": { "enum": ["open", "answered", "parked", "withdrawn"] },
+    "raised": { "$ref": "common.schema.json#/$defs/created" },
+    "answer": {
+      "type": "object",
+      "required": ["text", "by", "at"],
+      "properties": {
+        "text": { "type": "string" },
+        "by": { "$ref": "common.schema.json#/$defs/actor" },
+        "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "source": { "$ref": "common.schema.json#/$defs/ref", "description": "The told source (SRC-) where the answer is recorded." }
+      },
+      "additionalProperties": false
+    },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "answered" } } }, "then": { "required": ["answer"] } }
+  ],
+  "additionalProperties": false
+}

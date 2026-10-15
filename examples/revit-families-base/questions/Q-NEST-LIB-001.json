@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../schemas/question.schema.json",
+  "id": "Q-NEST-LIB-001",
+  "text": "Where is the library that nested and shared components should come from, by category, and is it the authoritative copy?",
+  "why": "Machiel uses shared and nested families and may need a library location for generated families to pull from.",
+  "kind": "gap",
+  "askedOf": "standards owner",
+  "priority": "high",
+  "relatesTo": [
+    "DDS-NEST-001",
+    "OUT-FAM-03",
+    "RES-FAM-LIBRARY"
+  ],
+  "status": "open",
+  "raised": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "distilled"
+  }
+}

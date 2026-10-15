@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../schemas/source.schema.json",
+  "id": "SRC-TOLD-20261015",
+  "kind": "told",
+  "medium": "message",
+  "title": "Machiel on why the harvester exists",
+  "description": "A client asked for help modelling Revit families to their standards. AI should build initial families to the standards; the harvester explores existing families to extract conventions and questions for review. Anyone in the company should be able to 'prompt a family'. Uses shared and nested families; may need a library location.",
+  "domain": "revit-families",
+  "jobs": [
+    "JOB-CREATE-FAMILY"
+  ],
+  "toldBy": [
+    {
+      "kind": "person",
+      "name": "Machiel Odendaal",
+      "role": "standards owner"
+    }
+  ],
+  "confidentiality": "internal",
+  "created": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "told"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../schemas/question.schema.json",
+  "id": "Q-FAM-MODIFY-001",
+  "text": "When someone comments on a family you built, how do the comments come back to you, and how do you record what you changed?",
+  "why": "The job map has no 'modify' step.",
+  "kind": "gap",
+  "askedOf": "family author",
+  "relatesTo": [
+    "JOB-CREATE-FAMILY"
+  ],
+  "status": "open",
+  "raised": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "distilled"
+  }
+}

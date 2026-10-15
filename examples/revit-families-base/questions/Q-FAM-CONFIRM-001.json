@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../schemas/question.schema.json",
+  "id": "Q-FAM-CONFIRM-001",
+  "text": "Before you build geometry, what do you check about the family's setup (template, reference planes, parameters), if anything?",
+  "why": "The job map has no 'confirm' step.",
+  "kind": "gap",
+  "askedOf": "family author",
+  "relatesTo": [
+    "JOB-CREATE-FAMILY"
+  ],
+  "status": "open",
+  "raised": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "distilled"
+  }
+}

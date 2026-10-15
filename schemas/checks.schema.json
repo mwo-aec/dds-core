@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/checks.schema.json",
+  "title": "Checks file",
+  "description": "The machine checks for one rule (<rule-name>.checks.json): deterministic tests a script can run over observations or a live artefact. A rule with no checks is reviewed by a person. Distil phase (written), Express/Review phases (run).",
+  "type": "object",
+  "required": [
+    "rule",
+    "checks"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "rule": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "check": {
+      "type": "object",
+      "required": [
+        "id",
+        "target",
+        "kind",
+        "severity",
+        "message"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "The rule id plus a dotted name: DDS-PARAM-003.present."
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "The subject kind the check runs over (adapter vocabulary): family, type, parameter, view, sheet …"
+        },
+        "aspect": {
+          "type": "string",
+          "description": "The aspect tested, adapter vocabulary (e.g. 'name'). Default 'name'."
+        },
+        "where": {
+          "type": "object",
+          "description": "Narrow the subjects: aspect → value, or aspect → array of values (any of), e.g. { \"category\": \"Doors\" }."
+        },
+        "kind": {
+          "enum": [
+            "required",
+            "forbidden",
+            "pattern",
+            "allowed-values",
+            "range",
+            "count",
+            "equals",
+            "unique",
+            "custom"
+          ],
+          "description": "required = each listed value must exist among the targets. forbidden = none may exist. pattern = every target's aspect matches the regex. allowed-values = aspect ∈ values. range = min ≤ aspect ≤ max. count = number of targets within min/max. equals = aspect equals values[0]. unique = no two targets share the aspect. custom = the adapter implements 'operation'."
+        },
+        "pattern": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "values": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "operation": {
+          "type": "string",
+          "description": "For kind 'custom': the adapter operation name."
+        },
+        "severity": {
+          "$ref": "common.schema.json#/$defs/severity"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extensions": {
+          "$ref": "common.schema.json#/$defs/extensions"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "pattern"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "pattern"
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "required",
+                  "forbidden",
+                  "allowed-values",
+                  "equals"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "values"
+            ],
+            "properties": {
+              "values": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "custom"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "operation"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/run.schema.json",
+  "title": "Run",
+  "description": "One time a job was done, by whoever was hired for each step, with the work record each step left. A step without a work record is not finished. Express phase.",
+  "type": "object",
+  "required": ["id", "job", "request", "packs", "started", "steps", "result"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix RUN-." },
+    "job": { "$ref": "common.schema.json#/$defs/ref" },
+    "request": { "type": "string", "description": "What was asked, as asked: 'Create a single-flush door family, 900 x 2100, our standards.'" },
+    "requestedBy": { "$ref": "common.schema.json#/$defs/actor" },
+    "packs": {
+      "type": "array",
+      "description": "The exact pack versions the run read, lowest layer first.",
+      "items": {
+        "type": "object",
+        "required": ["id", "version"],
+        "properties": { "id": { "type": "string" }, "version": { "$ref": "common.schema.json#/$defs/semver" } },
+        "additionalProperties": false
+      }
+    },
+    "started": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "ended": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "by", "result", "workRecords"],
+        "properties": {
+          "step": { "$ref": "common.schema.json#/$defs/ref" },
+          "by": { "$ref": "common.schema.json#/$defs/actor" },
+          "tools": { "$ref": "common.schema.json#/$defs/refs" },
+          "result": { "enum": ["done", "failed", "could-not-check", "skipped"], "description": "could-not-check is a failure, never a pass." },
+          "workRecords": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "location"],
+              "properties": {
+                "kind": { "enum": ["image", "structured-read", "calculation", "step-log", "report", "artefact"] },
+                "location": { "$ref": "common.schema.json#/$defs/location" },
+                "describes": { "type": "string" },
+                "cannotShow": { "type": "string", "description": "What this record does not show." }
+              },
+              "additionalProperties": false
+            }
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["check", "passed", "failed"],
+              "properties": {
+                "check": { "$ref": "common.schema.json#/$defs/ref" },
+                "passed": { "type": "integer", "minimum": 0 },
+                "failed": { "type": "integer", "minimum": 0 },
+                "couldNotRun": { "type": "boolean" },
+                "examples": { "type": "array", "items": { "type": "string" } }
+              },
+              "additionalProperties": false
+            }
+          },
+          "selfAssessment": { "type": "string", "description": "The AI's own view of its result, for calibration only — never acceptance." },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "result": { "enum": ["done", "partial", "failed"] },
+    "outputs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/location" } },
+    "questions": { "$ref": "common.schema.json#/$defs/refs", "description": "Questions the run raised." },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

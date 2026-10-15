@@ -1,0 +1,10 @@
+# Confidential capture material stays out of the repository
+**/captures/*/raw/
+**/samples/
+*.rfa
+*.rvt
+*.rft
+__pycache__/
+
+# Local hand-off files
+_incoming-*.zip

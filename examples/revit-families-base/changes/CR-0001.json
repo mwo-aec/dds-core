@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../schemas/change.schema.json",
+  "id": "CR-0001",
+  "kind": "add-resource",
+  "targets": [
+    "RES-FAM-LIBRARY"
+  ],
+  "pack": "digital-reframe",
+  "proposal": "Set RES-FAM-LIBRARY's path to the approved family library and list the furniture leg families in it.",
+  "rationale": "Generated families rebuild components the library already has (REV-20261015-EXAMPLE).",
+  "from": [
+    "REV-20261015-EXAMPLE",
+    "Q-NEST-LIB-001"
+  ],
+  "raised": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "distilled"
+  },
+  "status": "proposed"
+}

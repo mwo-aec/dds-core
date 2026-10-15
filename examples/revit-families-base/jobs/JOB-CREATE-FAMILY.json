@@ -1,0 +1,46 @@
+{
+  "$schema": "../../../schemas/job.schema.json",
+  "id": "JOB-CREATE-FAMILY",
+  "name": "Create a Revit family to our standards",
+  "version": "0.1.0",
+  "lifecycle": "draft",
+  "domain": "revit-families",
+  "owner": { "kind": "person", "name": "Machiel Odendaal", "role": "standards owner" },
+  "jobStory": {
+    "when": "someone in the company needs a Revit family, or a client asks us to model families to their standards",
+    "iWantTo": "prompt for it and get a family built as close to our (or the client's) standards as possible",
+    "soICan": "model faster and stay aligned to the standards without checking every family by hand",
+    "basis": "seen"
+  },
+  "toldBy": [{ "kind": "person", "name": "Machiel Odendaal", "role": "family author" }],
+  "sources": ["SRC-TOLD-20261015", "SRC-RAD-BASE-DDS"],
+  "outcomes": [
+    { "id": "OUT-FAM-01", "statement": "Reduce the chance a family leaves without the owner's identity parameters", "measure": "families failing DDS-PARAM-003.present", "basis": "seen", "evidence": [{ "ref": "DDS-PARAM-003" }] },
+    { "id": "OUT-FAM-02", "statement": "Reduce the chance a parameter is named or grouped off-standard", "basis": "seen", "evidence": [{ "ref": "SRC-RAD-BASE-DDS", "note": "DDS-PARAM-001, DDS-PARAM-004" }] },
+    { "id": "OUT-FAM-03", "statement": "Reduce the chance a nested component is rebuilt instead of taken from the approved library", "basis": "seen", "evidence": [{ "ref": "SRC-TOLD-20261015" }] },
+    { "id": "OUT-FAM-04", "statement": "Reduce the chance a nested family is shared when it doesn't need to be scheduled", "basis": "borrowed", "evidence": [{ "ref": "DDS-NEST-001" }] },
+    { "id": "OUT-FAM-05", "statement": "Reduce the time from request to a family that flexes correctly", "basis": "unset" }
+  ],
+  "mustNotGoWrong": [
+    "A client receives families that don't follow their standards",
+    "A family breaks when it flexes in a project"
+  ],
+  "jobMap": [
+    { "stage": "define", "steps": [{ "id": "STEP-FAM-DEFINE", "title": "Say what family is needed", "does": "Category, hosting, sizes, types, whose standards", "hired": { "now": "person" } }] },
+    { "stage": "locate", "steps": [{ "id": "STEP-FAM-LOCATE", "title": "Find the standards, template and library parts", "hired": { "now": "person", "next": "ai" }, "tasks": [
+      { "id": "TASK-FAM-LOCATE-1", "kind": "ai-does", "text": "Resolve the pack stack (base → client → project) for the request" },
+      { "id": "TASK-FAM-LOCATE-2", "kind": "ai-does", "text": "Pick the family template for the category" },
+      { "id": "TASK-FAM-LOCATE-3", "kind": "ai-asks", "text": "Which library family to nest, when more than one fits" }
+    ] }] },
+    { "stage": "prepare", "steps": [{ "id": "STEP-FAM-PREPARE", "title": "Set up reference planes and parameters", "hired": { "now": "person", "next": "ai" }, "rules": ["DDS-PARAM-003"], "outcomes": ["OUT-FAM-01", "OUT-FAM-02"], "workRecord": ["structured-read"] }] },
+    { "stage": "confirm", "gap": "No check before geometry is built that the setup matches the standard", "questions": ["Q-FAM-CONFIRM-001"] },
+    { "stage": "execute", "steps": [{ "id": "STEP-FAM-BUILD", "title": "Build geometry, nest components, add types", "hired": { "now": "person", "next": "ai-with-person" }, "rules": ["DDS-NEST-001"], "outcomes": ["OUT-FAM-03", "OUT-FAM-04"], "workRecord": ["artefact", "image"] }] },
+    { "stage": "monitor", "steps": [{ "id": "STEP-FAM-FLEX", "title": "Flex every type", "hired": { "now": "person", "next": "script" }, "outcomes": ["OUT-FAM-05"], "workRecord": ["step-log"] }] },
+    { "stage": "modify", "gap": "How review comments on a family are fed back is not described", "questions": ["Q-FAM-MODIFY-001"] },
+    { "stage": "conclude", "steps": [{ "id": "STEP-FAM-CHECK", "title": "Run checks and hand over", "hired": { "now": "person", "next": "ai-with-person", "finalYes": true }, "workRecord": ["report"] }] }
+  ],
+  "inputs": ["RES-FAM-LIBRARY", "RES-FAM-PARAMS", "TOOL-RVT-FAM-HARVEST"],
+  "openQuestions": ["Q-PARAM-003-001", "Q-NEST-LIB-001", "Q-FAM-CONFIRM-001", "Q-FAM-MODIFY-001"],
+  "review": { "quick": "The family author opens the family, flexes it and marks each finding accepted, changed or rejected.", "deep": "First five generated families, and before any family is generated without a person building it." },
+  "created": { "by": { "kind": "ai", "name": "claude-opus-5-5" }, "at": "2026-10-15", "method": "distilled" }
+}

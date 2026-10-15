@@ -1,0 +1,209 @@
+{
+  "$schema": "../../../schemas/job.schema.json",
+  "id": "JOB-CREATE-GA",
+  "name": "Create GAs",
+  "version": "0.1.0",
+  "lifecycle": "draft",
+  "domain": "revit-model",
+  "owner": {
+    "kind": "person",
+    "name": "[ENTITY GA OWNER]",
+    "role": "person responsible for this DDS"
+  },
+  "jobStory": {
+    "when": "a GA set is due to go to site",
+    "iWantTo": "check every plan and sheet against our standard",
+    "soICan": "issue it once without it coming back",
+    "basis": "unset"
+  },
+  "toldBy": [],
+  "outcomes": [
+    {
+      "id": "OUT-GA-01",
+      "statement": "Reduce the chance a storey has no GA plan",
+      "basis": "seen",
+      "evidence": [
+        {
+          "ref": "GA-R-010"
+        }
+      ]
+    },
+    {
+      "id": "OUT-GA-02",
+      "statement": "Reduce the chance a view is named off-pattern",
+      "basis": "seen",
+      "evidence": [
+        {
+          "ref": "GA-R-011",
+          "note": "typed names, double spaces (M-09)"
+        }
+      ]
+    },
+    {
+      "id": "OUT-GA-03",
+      "statement": "Reduce the chance plans drift between sheets",
+      "basis": "unset",
+      "evidence": [
+        {
+          "ref": "M-01",
+          "note": "12.4 mm drift; no rule yet"
+        }
+      ]
+    },
+    {
+      "id": "OUT-GA-04",
+      "statement": "Reduce the chance a sheet goes out on the wrong revision",
+      "basis": "seen",
+      "evidence": [
+        {
+          "ref": "M-02"
+        },
+        {
+          "ref": "M-03"
+        }
+      ]
+    },
+    {
+      "id": "OUT-GA-05",
+      "statement": "Reduce the time to confirm every room is tagged",
+      "basis": "seen",
+      "evidence": [
+        {
+          "ref": "GA-R-034"
+        }
+      ]
+    }
+  ],
+  "mustNotGoWrong": [
+    "Site finds our mistake",
+    "A sheet goes out on the wrong revision"
+  ],
+  "jobMap": [
+    {
+      "stage": "define",
+      "steps": [
+        {
+          "id": "STEP-GA-DEFINE",
+          "title": "Scope: block, levels, stage",
+          "hired": {
+            "now": "person"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "locate",
+      "steps": [
+        {
+          "id": "STEP-GA-0",
+          "title": "Check the model",
+          "hired": {
+            "now": "person",
+            "next": "ai"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "prepare",
+      "steps": [
+        {
+          "id": "STEP-GA-0B",
+          "title": "Levels, templates, scope box ready",
+          "hired": {
+            "now": "person",
+            "next": "ai"
+          }
+        }
+      ]
+    },
+    {
+      "stage": "confirm",
+      "steps": [
+        {
+          "id": "STEP-GA-1",
+          "title": "Audit the GA set",
+          "hired": {
+            "now": "person",
+            "next": "ai"
+          },
+          "workRecord": [
+            "structured-read",
+            "image"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "execute",
+      "steps": [
+        {
+          "id": "STEP-GA-2",
+          "title": "Make views and sheets",
+          "hired": {
+            "now": "person",
+            "next": "ai-with-person",
+            "finalYes": true
+          }
+        },
+        {
+          "id": "STEP-GA-3",
+          "title": "Dimension and tag",
+          "hired": {
+            "now": "person",
+            "next": "ai-with-person",
+            "finalYes": true
+          }
+        }
+      ]
+    },
+    {
+      "stage": "monitor",
+      "gap": "Plans drift between sheets while working; checked by eye",
+      "questions": [
+        "Q-GA-ALIGN-001"
+      ]
+    },
+    {
+      "stage": "modify",
+      "gap": "Revisions after comments ticked by hand; none marked issued",
+      "questions": [
+        "Q-GA-REV-001"
+      ]
+    },
+    {
+      "stage": "conclude",
+      "steps": [
+        {
+          "id": "STEP-GA-4",
+          "title": "Report",
+          "hired": {
+            "now": "person",
+            "next": "ai-with-person",
+            "finalYes": true
+          },
+          "workRecord": [
+            "report"
+          ]
+        }
+      ]
+    }
+  ],
+  "openQuestions": [
+    "Q-GA-ALIGN-001",
+    "Q-GA-REV-001"
+  ],
+  "created": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "distilled"
+  },
+  "extensions": {
+    "dds-for-aec": {
+      "note": "Rule ids GA-R-* and gap ids M-* refer to the DDS_forAEC repo; they resolve in that layer, not here."
+    }
+  }
+}

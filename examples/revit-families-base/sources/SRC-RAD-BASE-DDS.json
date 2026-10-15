@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../schemas/source.schema.json",
+  "id": "SRC-RAD-BASE-DDS",
+  "kind": "documented",
+  "medium": "document",
+  "title": "RaD base DDS 0.2.0 (digital-reframe)",
+  "description": "Nine rules and five checks in the RaD add-in's base layer.",
+  "location": {
+    "path": "C:\\Users\\Machiel Odendaal\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2025\\RaD\\dds"
+  },
+  "domain": "revit-families",
+  "jobs": [
+    "JOB-CREATE-FAMILY"
+  ],
+  "confidentiality": "internal",
+  "created": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "imported"
+  }
+}

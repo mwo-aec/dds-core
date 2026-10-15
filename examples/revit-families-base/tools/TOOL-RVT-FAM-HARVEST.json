@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../schemas/tool.schema.json",
+  "id": "TOOL-RVT-FAM-HARVEST",
+  "name": "Harvest families",
+  "kind": "mcp-tool",
+  "purpose": "Read every .rfa in a folder (or loaded in the open project) into observations. Families open in the background and close without saving.",
+  "phase": "capture",
+  "readOnly": true,
+  "deterministic": true,
+  "invocation": "rad-revit harvest_families { client, folder, max_families, recursive }",
+  "approval": {
+    "status": "approved",
+    "by": {
+      "kind": "person",
+      "name": "Machiel Odendaal",
+      "role": "standards owner"
+    },
+    "at": "2026-10-15"
+  },
+  "version": "RaD 0.2.0"
+}

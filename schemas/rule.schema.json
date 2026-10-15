@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/rule.schema.json",
+  "title": "Rule (front-matter)",
+  "description": "The YAML front-matter of a rule file (rules/<area>/<name>.md). The Markdown body below it holds the rule in words with sections '## Why', '## Examples' and '## Open questions'. Machine checks for the rule sit beside it in <name>.checks.json. Compatible with RaD rule files; 'from' is accepted as an alias of 'layer'. Distil phase.",
+  "type": "object",
+  "required": ["id", "title", "area", "severity", "basis", "version"],
+  "properties": {
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Domain prefix, area code, number: DDS-PARAM-003." },
+    "title": { "type": "string", "minLength": 1 },
+    "area": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "The folder under rules/: naming, parameters, nesting, geometry, views-and-sheets …" },
+    "appliesTo": { "type": "array", "items": { "type": "string" }, "description": "Subject scopes the rule applies to, adapter vocabulary; ['all'] for everything." },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "severity": { "$ref": "common.schema.json#/$defs/severity" },
+    "lifecycle": { "$ref": "common.schema.json#/$defs/lifecycle" },
+    "status": { "$ref": "common.schema.json#/$defs/lifecycle", "description": "Alias of lifecycle, for RaD compatibility. If both are present they must match." },
+    "basis": { "$ref": "common.schema.json#/$defs/basis" },
+    "version": { "$ref": "common.schema.json#/$defs/semver" },
+    "layer": { "type": "string", "description": "The id of the pack (layer) this rule belongs to." },
+    "from": { "type": "string", "description": "RaD alias of layer." },
+    "overrides": { "anyOf": [{ "$ref": "common.schema.json#/$defs/ref" }, { "type": "null" }], "description": "The id of a rule in a lower layer that this rule replaces." },
+    "jobs": { "$ref": "common.schema.json#/$defs/refs", "description": "Jobs this rule serves." },
+    "outcomes": { "$ref": "common.schema.json#/$defs/refs", "description": "Outcomes (OUT-) this rule protects." },
+    "evidence": { "$ref": "common.schema.json#/$defs/evidence" },
+    "confirmed": { "$ref": "common.schema.json#/$defs/confirmation" },
+    "created": { "$ref": "common.schema.json#/$defs/created" },
+    "questions": { "$ref": "common.schema.json#/$defs/refs", "description": "Open questions (Q-) about this rule." },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "anyOf": [
+    { "required": ["lifecycle"] },
+    { "required": ["status"] }
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "basis": { "const": "confirmed" } } },
+      "then": { "required": ["confirmed"] }
+    },
+    {
+      "if": { "properties": { "basis": { "const": "seen" } } },
+      "then": { "required": ["evidence"] }
+    }
+  ],
+  "additionalProperties": false
+}

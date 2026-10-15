@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/pack.schema.json",
+  "id": "entity-architects",
+  "name": "Entity Architects — General Arrangements (example)",
+  "layer": "firm",
+  "version": "0.1.0",
+  "extends": [
+    {
+      "id": "digital-reframe",
+      "version": "^0.2.0"
+    }
+  ],
+  "owner": {
+    "kind": "person",
+    "name": "[ENTITY STANDARDS OWNER]",
+    "role": "standards owner"
+  },
+  "domains": [
+    "revit-model"
+  ],
+  "description": "Shows the core on a second domain: the GA job from the DDS_forAEC pilot. Rules live in that repo and Entity's Notion; only the job is reproduced here.",
+  "confidentiality": "confidential",
+  "created": {
+    "by": {
+      "kind": "ai",
+      "name": "claude-opus-5-5"
+    },
+    "at": "2026-10-15",
+    "method": "imported"
+  }
+}

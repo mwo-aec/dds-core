@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../../schemas/capture-run.schema.json",
+  "id": "CAP-20261015-EXAMPLE",
+  "adapter": {
+    "id": "revit-families",
+    "version": "0.1.0",
+    "tool": "RaD harvest_families"
+  },
+  "owner": "digital-reframe",
+  "scope": {
+    "description": "ILLUSTRATIVE — three facts from one made-up family, to show the format",
+    "sample": {
+      "method": "hand-picked",
+      "size": 1
+    }
+  },
+  "sources": [
+    "SRC-LIB-EXAMPLE"
+  ],
+  "started": "2026-10-15T18:00:00+02:00",
+  "ended": "2026-10-15T18:00:05+02:00",
+  "by": {
+    "kind": "script",
+    "name": "RaD harvest_families",
+    "version": "0.2.0"
+  },
+  "counts": {
+    "families": 1,
+    "observations": 4
+  },
+  "outputs": [
+    {
+      "path": "captures/CAP-20261015-EXAMPLE/observations.jsonl"
+    }
+  ],
+  "problems": [
+    {
+      "subject": "Example-Table.rfa/nested/Leg",
+      "message": "Could not read association of nested parameter 'Height' (example of a recorded problem)"
+    }
+  ],
+  "confidentiality": "internal"
+}

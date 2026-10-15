@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://digitalreframe.tech/dds-core/schemas/review.schema.json",
+  "title": "Review (After-Action Review)",
+  "description": "A named person's review of a run, item by item, through the four AAR questions: what was supposed to happen, what happened, why the difference, what we keep or change. Review phase.",
+  "type": "object",
+  "required": ["id", "run", "reviewer", "mode", "scope", "at", "items"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id", "description": "Prefix REV-." },
+    "run": { "$ref": "common.schema.json#/$defs/ref" },
+    "reviewer": { "$ref": "common.schema.json#/$defs/actor" },
+    "mode": { "enum": ["quick", "deep"], "description": "quick = every-run live correction. deep = a deliberate debrief (early runs, before handing more of a step to AI)." },
+    "scope": { "type": "string", "description": "What the reviewer actually looked at. A review without a stated scope does not count." },
+    "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["subject", "verdict"],
+        "properties": {
+          "subject": { "type": "string", "description": "The finding, output or step reviewed." },
+          "verdict": { "enum": ["accepted", "changed", "rejected"] },
+          "supposed": {
+            "type": "object",
+            "description": "AAR 1 — what was supposed to happen.",
+            "properties": { "outcome": { "$ref": "common.schema.json#/$defs/ref" }, "rule": { "$ref": "common.schema.json#/$defs/ref" }, "text": { "type": "string" } },
+            "additionalProperties": false
+          },
+          "happened": {
+            "type": "object",
+            "description": "AAR 2 — what actually happened.",
+            "properties": { "text": { "type": "string" }, "evidence": { "$ref": "common.schema.json#/$defs/evidence" } },
+            "additionalProperties": false
+          },
+          "cause": {
+            "enum": ["standard-gap", "execution-error", "mapping-gap", "project-specific", "preference", "unknown"],
+            "description": "AAR 3 — why the difference. standard-gap = nothing written covered it. execution-error = the rule was clear, the work missed it. mapping-gap = the rule is right but the host/tool can't express it as mapped. project-specific = right here, not a rule. preference = the reviewer's taste, not the owner's standard. unknown = ask."
+          },
+          "keep": { "type": "string", "description": "AAR 4 — what to keep." },
+          "change": { "type": "string", "description": "AAR 4 — what to change." },
+          "changes": { "$ref": "common.schema.json#/$defs/refs", "description": "Change requests (CR-) this item produced." },
+          "questions": { "$ref": "common.schema.json#/$defs/refs", "description": "Questions (Q-) this item produced." }
+        },
+        "allOf": [
+          { "if": { "properties": { "verdict": { "enum": ["changed", "rejected"] } } }, "then": { "required": ["cause"] } }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "summary": { "type": "string" },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "additionalProperties": false
+}

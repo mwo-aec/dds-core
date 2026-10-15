@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../schemas/review.schema.json",
+  "id": "REV-20261015-EXAMPLE",
+  "run": "RUN-20261015-EXAMPLE",
+  "reviewer": {
+    "kind": "person",
+    "name": "Machiel Odendaal",
+    "role": "family author"
+  },
+  "mode": "deep",
+  "scope": "Opened the family, flexed both types, read the parameter list.",
+  "at": "2026-10-15",
+  "items": [
+    {
+      "subject": "Identity parameters",
+      "verdict": "accepted",
+      "supposed": {
+        "rule": "DDS-PARAM-003"
+      },
+      "happened": {
+        "text": "All five present, type parameters, in Data."
+      }
+    },
+    {
+      "subject": "Table leg",
+      "verdict": "changed",
+      "supposed": {
+        "outcome": "OUT-FAM-03",
+        "text": "Nested components come from the approved library."
+      },
+      "happened": {
+        "text": "The leg was modelled in place.",
+        "evidence": [
+          {
+            "ref": "RUN-20261015-EXAMPLE"
+          }
+        ]
+      },
+      "cause": "standard-gap",
+      "keep": "Associating leg height to the host.",
+      "change": "Register the library and say which leg family to nest.",
+      "changes": [
+        "CR-0001"
+      ],
+      "questions": [
+        "Q-NEST-LIB-001"
+      ]
+    }
+  ],
+  "summary": "ILLUSTRATIVE review showing one accepted and one changed item."
+}

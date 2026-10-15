@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../schemas/question.schema.json",
+  "id": "Q-PARAM-003-001",
+  "text": "Should TXT_Creator be the person who authored the family, or always the company owner?",
+  "why": "Open question written into DDS-PARAM-003 by its author.",
+  "kind": "intent",
+  "askedOf": "standards owner",
+  "options": [
+    "The person who authored the family",
+    "Always the company owner"
+  ],
+  "priority": "normal",
+  "relatesTo": [
+    "DDS-PARAM-003"
+  ],
+  "status": "open",
+  "raised": {
+    "by": {
+      "kind": "person",
+      "name": "Machiel Odendaal",
+      "role": "standards owner"
+    },
+    "at": "2026-10-15",
+    "method": "authored"
+  }
+}
